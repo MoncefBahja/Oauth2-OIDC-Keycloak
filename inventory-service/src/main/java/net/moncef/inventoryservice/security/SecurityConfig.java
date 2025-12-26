@@ -18,15 +18,21 @@ import java.util.Arrays;
 @EnableWebSecurity
 
 public class SecurityConfig {
+     private JwtAuthConverter jwtAuthConverter ;
+    SecurityConfig (JwtAuthConverter jwtAuthConverter) {
+        this.jwtAuthConverter = jwtAuthConverter ;
+    }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
+                .oauth2ResourceServer(o2->o2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthConverter)))// Resource Server OAuth2 qui va protéger mes endpoints et vérifier automatiquement les JWT
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .headers(h->h.frameOptions(fo->fo.disable()))
                 .authorizeHttpRequests(ar -> ar
-                        .requestMatchers("/api/**","/h2-console/**").permitAll()
+                        .requestMatchers("/h2-console/**").permitAll()
+                        .requestMatchers("/api/products").hasAuthority("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .build();

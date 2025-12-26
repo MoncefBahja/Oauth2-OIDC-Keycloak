@@ -3,6 +3,7 @@ package net.moncef.inventoryservice.web;
 
 import net.moncef.inventoryservice.Entities.Product;
 import net.moncef.inventoryservice.repos.ProductRepo;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,10 @@ public class ProductRestController {
     public  Product productById (@PathVariable String id) {
 
         return productRepo.findById(id).get();
+    }
+    @GetMapping ("/auth")
+    public  Authentication authentication (Authentication authentication) {
+        return  authentication ;
     }
 
 
