@@ -3,6 +3,7 @@ package net.moncef.inventoryservice.web;
 
 import net.moncef.inventoryservice.Entities.Product;
 import net.moncef.inventoryservice.repos.ProductRepo;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +19,7 @@ public class ProductRestController {
     }
 
     @GetMapping("/products")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<Product> productList () {
         return  productRepo.findAll() ;
     }

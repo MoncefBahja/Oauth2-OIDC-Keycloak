@@ -2,6 +2,7 @@ package net.moncef.inventoryservice.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -16,6 +17,7 @@ import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 
 public class SecurityConfig {
      private JwtAuthConverter jwtAuthConverter ;
@@ -32,7 +34,9 @@ public class SecurityConfig {
                 .headers(h->h.frameOptions(fo->fo.disable()))
                 .authorizeHttpRequests(ar -> ar
                         .requestMatchers("/h2-console/**").permitAll()
+/*
                         .requestMatchers("/api/products").hasAuthority("ADMIN")
+*/
                         .anyRequest().authenticated()
                 )
                 .build();

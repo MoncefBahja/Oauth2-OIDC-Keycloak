@@ -1,4 +1,6 @@
-import { Component, signal } from '@angular/core';
+import {Component, OnInit, signal} from '@angular/core';
+import {KeycloakProfile} from "keycloak-js";
+import {KeycloakService} from 'keycloak-angular';
 
 @Component({
   selector: 'app-root',
@@ -6,6 +8,37 @@ import { Component, signal } from '@angular/core';
   standalone: false,
   styleUrl: './app.css'
 })
-export class App {
+export class App implements OnInit{
+/*
   protected readonly title = signal('Angular-app');
+*/
+
+  title = 'app-client';
+  public profile! : KeycloakProfile;
+  constructor(public keycloakService : KeycloakService) {
+  }
+  ngOnInit() {
+    if(this.keycloakService.isLoggedIn()){
+      this.keycloakService.loadUserProfile().then(profile=>{
+        this.profile=profile;
+      });
+    }
+  }
+
+
+  async  handleLogin() {
+    await this.keycloakService.login({
+      redirectUri: window.location.origin
+    });
+  }
+
+   handleLogout() {
+    this.keycloakService.logout(window.location.origin);
+
+  }
+
+
 }
+
+
+
